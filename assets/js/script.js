@@ -256,8 +256,6 @@ const arregloCursos = [
     // Si no hay ningun filtro, retorna catalogo
     if (parseInt(dropCategoria.value) == -1 && (parseInt(dropOrden.value) == -1)){
 
-      console.log('Entro 1');
-
       return arregloCursos;
 
     }
