@@ -41,7 +41,7 @@ const arregloCursos = [
       id_curso: 5,
       nombre_curso: "Taller de Cocina Chilena - Niven 1",
       categoria: "Cocina",
-      horas: 190,
+      horas: 165,
       img:"curso_5.jpg",
       popularidad: 4,
       descripcion: "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
@@ -165,9 +165,11 @@ const arregloCursos = [
 
     cargaFiltrosCategorias();    
 
-    let btnFiltrar = document.getElementById('btnFiltrar');
+    document.getElementById('btnFiltrar').addEventListener('click',filtrarCatalogo);
 
-    btnFiltrar.addEventListener('click',filtrarCatalogo);
+    document.getElementById('btnLimpiar').addEventListener('click',limpiarCatalogo);
+
+    
 
     }catch(exception){
 
@@ -215,9 +217,7 @@ const arregloCursos = [
 
       let resultado =  agregarCursoCarrito(productoActivo);
 
-      if(resultado != 'ok'){
-        alert('Este curso ya se encuentra en su carrito');
-      }      
+      resultado != 'ok'?alert('Este curso ya se encuentra en su carrito'):alert('Curso agregado a Carrito');
 
       });
 
@@ -253,53 +253,77 @@ const arregloCursos = [
 
     let arrayCursosFiltrados = [];
 
-    if(parseInt(dropCategoria.value) != -1){
+    // Si no hay ningun filtro, retorna catalogo
+    if (parseInt(dropCategoria.value) == -1 && (parseInt(dropOrden.value) == -1)){
 
-        arrayCursosFiltrados = arregloCursos.filter(curso => String(curso.categoria).toLowerCase() == String(dropCategoria.value).toLowerCase());
+      console.log('Entro 1');
 
-    }        
-
-    if(parseInt(dropOrden.value) != -1){
-
-        if(arrayCursosFiltrados.length == 0){
-          arrayCursosFiltrados = arregloCursos
-        }
-
-        if(arrayCursosFiltrados.length > 0){
-            arrayFiltradoOrden = arrayCursosFiltrados;
-        }
-
-        switch(dropOrden.value){
-
-          case 'pop':
-            arrayCursosFiltrados.sort(({popularidad:a}, {popularidad:b}) => b - a);
-            break;
-
-            case 'asc':
-              arrayCursosFiltrados.sort(({nombre_curso:a}, {nombre_curso:b}) => b.localeCompare(a));
-              break;
-
-              case 'desc':
-                arrayCursosFiltrados.sort(({nombre_curso:a}, {nombre_curso:b}) => a.localeCompare(b));
-                break;
-
-                case 'max':
-                  arrayCursosFiltrados.sort(({horas:a}, {horas:b}) => b - a);
-                  break;
-
-                  case 'min':
-                    arrayCursosFiltrados.sort(({horas:a}, {horas:b}) => a - b);                    
-                    break;
-
-
-        }
-
+      return arregloCursos;
 
     }
 
-    arrayFiltradoOrden = arrayCursosFiltrados;
+      // Filtra 1ero por categoria
+      arrayCursosFiltrados = arregloCursos.filter(curso => String(curso.categoria).toLowerCase() == String(dropCategoria.value).toLowerCase());
 
-    muestraCatalogo(arrayFiltradoOrden);
+      // Si no filtramos por categoria, asignamos el catalogo al array de busqueda
+      if(arrayCursosFiltrados.length == 0){
+
+        arrayCursosFiltrados = [... arregloCursos];
+
+      }           
+
+    // Filtra por criterio
+    if(parseInt(dropOrden.value) != -1 && parseInt(dropCategoria.value) == -1){
+
+      arrayFiltradoOrden = filtraCriterio(dropOrden.value,arrayCursosFiltrados);
+
+    } 
+
+    // Filtra por criterio + Categoria
+    if(parseInt(dropOrden.value) != -1 && parseInt(dropCategoria.value) != -1){
+
+        arrayFiltradoOrden = filtraCriterio(dropOrden.value,arrayCursosFiltrados);
+
+    }
+
+    // Dibuja el catalogo con los filtros
+    muestraCatalogo(arrayCursosFiltrados);
+
+  }
+
+  function filtraCriterio(orden,arrayCursosFiltrados){
+
+    switch(orden){
+
+      case 'pop':
+        return arrayCursosFiltrados.sort(({popularidad:a}, {popularidad:b}) => b - a);
+        break;
+
+        case 'asc':
+          return arrayCursosFiltrados.sort(({nombre_curso:a}, {nombre_curso:b}) => b.localeCompare(a));
+          break;
+
+          case 'desc':
+            return arrayCursosFiltrados.sort(({nombre_curso:a}, {nombre_curso:b}) => a.localeCompare(b));
+            break;
+
+            case 'max':
+              return arrayCursosFiltrados.sort(({horas:a}, {horas:b}) => b - a);
+              break;
+
+              case 'min':
+                return arrayCursosFiltrados.sort(({horas:a}, {horas:b}) => a - b);                    
+                break;
+
+    }
+
+  }
+
+  function limpiarCatalogo(){
+
+    cargaFiltrosCategorias();  
+    
+    muestraCatalogo(arregloCursos);   
 
   }
 
@@ -310,7 +334,9 @@ const arregloCursos = [
     arregloCursos.forEach(curso => {
 
         if(!arrayCategorias.includes(curso.categoria)){
+
             arrayCategorias.push(curso.categoria);
+            
         }
 
     });
@@ -441,7 +467,7 @@ const arregloCursos = [
 
     if(indiceCurso != -1){
 
-      let nuevoCarrito = carrito.splice(indiceCurso,1);
+      carrito.splice(indiceCurso,1);
 
       actualizaCarrito(carrito);
 
