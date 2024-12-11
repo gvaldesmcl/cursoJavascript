@@ -105,20 +105,20 @@ const arregloCursos = [
 
 // Carga Funcionalidad en Paginas
 
-//Utilizado en producto.html
-iniciaFichaProducto();
+  //Utilizado en producto.html
+  iniciaFichaProducto();
 
-//utilizado en index.html
-muestraUltimosCursos();
+  //utilizado en index.html
+  muestraUltimosCursos();
 
-//utilizado en cursos.html
-iniciaCatalogo();
+  //utilizado en cursos.html
+  iniciaCatalogo();
 
-// utilizado en carrito.html
-iniciaCarrito();
+  // utilizado en carrito.html
+  iniciaCarrito();
 
-// Obtiene idndicadores diarios mediante llamada a API
-obtenerIndicadores();
+  // Obtiene idndicadores diarios mediante llamada a API
+  obtenerIndicadores();
 
 // END Carga Funcionalidad en Paginas
 
